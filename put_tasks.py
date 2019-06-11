@@ -18,7 +18,6 @@ with open("credson/put-tasks.json") as json_file:
     credentials_json_file = json_data["credentials_json_file"]
 
 
-
 def get_service():
     print("Getting service...")
     creds = None
@@ -66,18 +65,31 @@ def upload_tasks(service):
 def delete_tasks(service):
     print("Deleting tasks...")
     tasks = service.tasks().list(tasklist="@default",
+                                 maxResults=100,
                                  showCompleted=True,
                                  showHidden=True).execute()
-    for t in tasks["items"]:
-        service.tasks().delete(tasklist="@default", task=t["id"]).execute()
+    if len(tasks) > 2:
+        next_page_token = tasks["nextPageToken"]
+        for t in tasks["items"]:
+            service.tasks().delete(tasklist="@default", task=t["id"]).execute()
+        while next_page_token:
+            tasks = service.tasks().list(tasklist="@default",
+                                         maxResults=100,
+                                         showCompleted=True,
+                                         pageToken=next_page_token,
+                                         showHidden=True).execute()
+            if len(tasks) > 2:
+                for t in tasks["items"]:
+                    service.tasks().delete(tasklist="@default",
+                                           task=t["id"]).execute()
 
 
 def put_tasks():
     service = get_service()
-    file_tasklists(service)
+    # file_tasklists(service)
     delete_tasks(service)
     upload_tasks(service)
-    print("Reached the end")
+    print("~~~ THE END ~~~")
 
 
 if __name__ == "__main__":
