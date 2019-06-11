@@ -93,10 +93,11 @@ def get_coming_events(year, month, day):
     print("-----------------------------")
     print("GET TODAY'S AND COMING EVENTS")
     print("-----------------------------")
-    #day = int(input("Reference day  : "))
-    #month = int(input("Reference month: "))
-    #year = int(input("Reference year : "))
-    days_lookahead = int(input("Lookahead days : "))
+    # day = int(input("Reference day  : "))
+    # month = int(input("Reference month: "))
+    # year = int(input("Reference year : "))
+    # days_lookahead = int(input("Lookahead days : "))
+    days_lookahead = 2
     # TODO Why can't this be = days_lookahead (for the same period)?
     days_after = days_lookahead - 1
     # TODO Why can't this be = 0 (for current day)?
