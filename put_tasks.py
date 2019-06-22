@@ -9,13 +9,13 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 
-with open("credson/put-tasks.json") as json_file:
+with open("settings-private/settings.json") as json_file:
     json_data = json.load(json_file)
-    scopes = json_data["scopes"]
+    scopes = json_data["tasks_scopes"]
     tasklists = json_data["tasklists"]
-    token_pickle_file = json_data["token_pickle_file"]
-    todays_tasks_file = json_data["todays_tasks_file"]
-    credentials_json_file = json_data["credentials_json_file"]
+    token_pickle_file = json_data["tasks_token_pickle_file"]
+    todays_tasks_file = json_data["directory"] + json_data["today"]
+    credentials_json_file = json_data["tasks_credentials_json_file"]
 
 
 def get_service():
@@ -69,7 +69,10 @@ def delete_tasks(service):
                                  showCompleted=True,
                                  showHidden=True).execute()
     if len(tasks) > 2:
-        next_page_token = tasks["nextPageToken"]
+        if len(tasks) > 3:
+            next_page_token = tasks["nextPageToken"]
+        else:
+            next_page_token = False
         for t in tasks["items"]:
             service.tasks().delete(tasklist="@default", task=t["id"]).execute()
         while next_page_token:

@@ -13,13 +13,13 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 
-with open("credson/get-coming-events.json") as json_file:
+with open("settings-private/settings.json") as json_file:
     json_data = json.load(json_file)
-    scopes = json_data["scopes"]
+    scopes = json_data["calendar_scopes"]
     calendars = json_data["calendars"]
-    token_pickle_file = json_data["token_pickle_file"]
+    token_pickle_file = json_data["calendar_token_pickle_file"]
     coming_events_file = json_data["coming_events_file"]
-    credentials_json_file = json_data["credentials_json_file"]
+    credentials_json_file = json_data["calendar_credentials_json_file"]
     all_calendars_dump_file = json_data["all_calendars_dump_file"]
 
 
@@ -106,7 +106,7 @@ def get_coming_events(year, month, day):
     service = authorise_access()
     gen_calendars_dump_file(service, reference_day, days_before, days_after)
     gen_coming_events_file(reference_day, days_lookahead)
-    print("Reached the end")
+    print("~~~ THE END ~~~")
 
 
 if __name__ == "__main__":
