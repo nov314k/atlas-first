@@ -21,6 +21,7 @@ with open("settings-private/settings.json") as settings_file:
     today = directory + settings["today"]
     daily = directory + settings["daily"]
     noras = directory + settings["noras"]
+    study = directory + settings["study"]
     fusion = directory + settings["fusion"]
     laguna = directory + settings["laguna"]
     booked = directory + settings["booked"]
@@ -33,11 +34,12 @@ with open("settings-private/settings.json") as settings_file:
     counter_limit = int(settings["numof_project_tasks_to_include"])
     start_label = settings["start_label"]
     lunch_label = settings["lunch_label"]
+    study_label = settings["study_label"]
     dinner_label = settings["dinner_label"]
+    fusion_label = settings["fusion_label"]
     shopping_label = settings["shopping_label"]
     main_work_label = settings["main_work_label"]
     day_routine_label = settings["day_routine_label"]
-    additional_work_label = settings["additional_work_label"]
     morning_routine_label = settings["morning_routine_label"]
     evening_routine_label = settings["evening_routine_label"]
 
@@ -101,29 +103,36 @@ def add_project_tasks(project_tasks):
         # ~ for t in new_tasks:
             # ~ print(t, file=f)
 
-
 daily_tasks = read_tasks_file(daily)
 add_daily_segment(daily_tasks, start_label)
 add_daily_segment(daily_tasks, morning_routine_label)
 
-# Coming events
+# Add coming events
 get_coming_events(year, month, day)
 coming_events = read_tasks_file(coming_events)
 for e in coming_events:
     new_tasks.append(due_label + e[:len(e)-1])
 
-# Booked tasks
+# Add booked tasks
 booked_tasks = read_tasks_file(booked)
 for t in booked_tasks:
     if t[6:6+10] <= today_str:
         new_tasks.append(t[:len(t)-1])
 
+# Add main work tasks
 add_daily_segment(daily_tasks, main_work_label)
+add_project_tasks(read_tasks_file(noras))
 
-# Special section!
-#add_project_tasks(read_tasks_file(shlist))
+add_daily_segment(daily_tasks, shopping_label)
+add_daily_segment(daily_tasks, lunch_label)
+add_daily_segment(daily_tasks, day_routine_label)
 
-# Late tasks
+add_daily_segment(daily_tasks, study_label)
+add_project_tasks(read_tasks_file(study))
+
+add_daily_segment(daily_tasks, fusion_label)
+
+# Add late tasks
 late_tasks = read_tasks_file(today)
 for i in late_tasks:
     if stays_label in i              \
@@ -136,30 +145,21 @@ for i in late_tasks:
             i = "- " + late_label + " " + i[2:len(i)]
         new_tasks.append(i[:len(i)-1])
 
-# Fusion tasks
-add_project_tasks(read_tasks_file(fusion))
-
-# Weekly tasks
+# Add weekly tasks
 weekly_tasks = read_tasks_file(weekly)
 for t in weekly_tasks:
     dow = t[t.find(dow_label)+4:t.find(dow_label)+4+3]
     if weekdays[date.weekday()] == dow:
         new_tasks.append(t[:len(t)-1])
 
-# Periodic tasks
+# Add periodic tasks
 periodic_tasks = read_tasks_file(periodic)
 for t in periodic_tasks:
     if t[0] != 'x' and t[6:6+10] <= today_str:
         new_tasks.append(t[:len(t)-1])
 
-# Special section!
-#add_project_tasks(read_tasks_file(laguna))
-#add_project_tasks(read_tasks_file(skola))
+add_project_tasks(read_tasks_file(fusion))
 
-add_daily_segment(daily_tasks, shopping_label)
-add_daily_segment(daily_tasks, lunch_label)
-add_daily_segment(daily_tasks, day_routine_label)
-add_daily_segment(daily_tasks, additional_work_label)
 add_daily_segment(daily_tasks, dinner_label)
 add_daily_segment(daily_tasks, evening_routine_label)
 
