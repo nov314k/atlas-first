@@ -11,7 +11,7 @@ from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 
-with open("credson/write-mensdays.json") as json_file:
+with open("settings-private/write-mensdays.json") as json_file:
     json_data = json.load(json_file)
     scopes = json_data["scopes"]
     PERIOD = json_data["PERIOD"]
